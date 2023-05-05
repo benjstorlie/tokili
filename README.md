@@ -1,4 +1,6 @@
-# Pick-a-Pic
+# Tokili
+
+- Forked from group project (Pick-a-Pic)[github.com/benjstorlie/pick-a-pic]
 
 ## Concept
 
