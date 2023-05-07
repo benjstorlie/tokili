@@ -17,7 +17,8 @@ window.onload = function() {
     console.log(pageData.title);
   }
 
-  if (pageData.heading) {
+  if (!isBlankOrHidden(pageData.heading)) {
+    headingArea.addClass("d-flex").removeClass("d-none");
     headingArea.append(displayHeading(pageData.heading));
   }
 
@@ -27,6 +28,16 @@ window.onload = function() {
     }
   }
 
+}
+
+function isBlankOrHidden(cardData) {
+  if (!cardData.show) {
+    return true
+  } else {
+    if (!cardData.title && !cardData.src) {
+      return true
+    } else {return false}
+  }
 }
 
 function gotoHomePage() {
@@ -39,7 +50,7 @@ function displayCard(cardData) {
   // This returns a JQuery <div> object
   // The <div> has Bootstrap class="card", and has a card object inside
 
-  const card=$("<div>").addClass("card m-1").attr("id","card-"+cardData.stamp);
+  const card=$("<div>").addClass("card deploy-card m-1").attr("id","card-"+cardData.stamp)
   
   if (cardData.title) {
     card.append(`
