@@ -36,7 +36,6 @@ function populatePageList() {
       }
     }
   }
-  
 }
 
 function addPageCard(pageData) {
