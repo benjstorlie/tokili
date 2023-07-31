@@ -21,23 +21,23 @@
         </form>
       </div>
     </div>
-    <div class="row flex-grow-1 bg-dark whole-lr-container">
-      <div class="col-2 d-flex flex-column justify-content-center bg-dark border left-container"> <!-- Menu goes here -->
-        <!-- deleted h-25 class -->
+    <div class="row flex-grow-1 bg-dark">
+      <div class="col-2 d-flex flex-column justify-content-center">
+        <!-- Menu goes here -->
         <div class="btn-group-vertical d-flex flex-column nav-container" role="group">
-          <div role="button" type="button" class="btn btn-lg btn-primary nav-editor-fifth" onclick="gotoHomePage()">
+          <div role="button" type="button" class="btn btn-lg btn-primary" onclick="gotoHomePage()">
             <i class="btn-symbol " role="icon">&#x1F519;</i>
            </div>
-          <div role="button" type="button" class="btn btn-lg btn-success nav-editor-fifth">
+          <div role="button" type="button" class="btn btn-lg btn-success">
             <i class="btn-symbol " role="icon">&#x1F4BE;</i>
             </div>
-          <div role="button" type="button" class="btn btn-lg btn-danger nav-editor-fifth">
+          <div role="button" type="button" class="btn btn-lg btn-danger">
             <i class="btn-symbol " role="icon">&#x1F5D1;</i>
           </div>
-          <div role="button" type="button" class="btn btn-lg btn-info nav-editor-fifth" onclick="deploy()" >
+          <div role="button" type="button" class="btn btn-lg btn-info" onclick="deploy()" >
             <i class="btn-symbol " role="icon">&#x25B6;</i>
           </div>
-          <div role="button" type="button" class="btn btn-lg btn-warning btn-block nav-editor-fifth" onclick="newCard()">
+          <div role="button" type="button" class="btn btn-lg btn-warning btn-block" id="add-card-btn">
             <i class="btn-symbol " role="icon">&#x2795;</i>
           </div>
         </div>
@@ -46,21 +46,65 @@
       <div id="editor" class="col d-flex flex-column bg-dark ">
          <!-- Editor goes here -->
 
-        <div id="heading-area" class="d-flex"> <!-- Either heading-card editor, or add heading button -->
-          
+        <div id="heading-area" class="d-flex"> 
+          <!-- Either heading-card editor, or add heading button -->
+          <div class="card my-1 d-flex flex-row" id="heading">
+            <div class="card-left-sider">
+              <form id="form-heading">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <button class="btn btn-secondary btn-speech">
+                      <i class="btn-symbol" role='icon'>&#x1F4AC;</i>
+                    </button>
+                  </div>
+                  <input type="text" class="form-control" placeholder="add heading or question!" id="input-heading">
+                </div>
+              </form>
+            </div>
+              <button id="img-heading" role="button" class="btn btn-outline-primary img-heading img-div" data-toggle="modal" data-target="#modal-heading">
+            <button id="delete-heading" type="button" class="close" aria-label="Delete">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <button class="btn btn-warning btn-lg" id="heading-btn">Add Heading or Question!</button>
+
         </div>
       
-            <div id="space" class="card-deck h-100 w-100 flex-grow-1 d-flex flex-wrap" style="display: flex; justify-content: space-around; align-items: center;">
-   
-            <!-- Somehow accommodate for variable numbers of cards -->
+        <div id="card-deck" class="card-deck h-100 w-100 flex-grow-1 d-flex flex-wrap" style="display: flex; justify-content: space-around; align-items: center;">
+
+        <!-- Somehow accommodate for variable numbers of cards -->
         </div>
 
       </div>
     </div>
+  
+
+    <!-- Heading Modal -->
+    <div class="modal fade" id="modal-heading" data-id="heading" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header flex-wrap sticky-top">
+            <h4 class="modal-title">Add Image</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="w-100"></div>
+            <form id="modal-form-heading" data-id="heading" class="d-block">
+            <input type="text" class="form-control" id="search-input-heading" data-id="heading" placeholder="search">
+            </form>
+          </div>
+          <div id="modal-body-heading" class="modal-body overflow-auto" data-id="heading">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary save-img-btn" id="saveImgBtn-heading" data-id="heading">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-
-
 
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
@@ -69,7 +113,7 @@
     crossorigin="anonymous">
   </script>
   
-  <script src="./assets/js/editor-script.js"></script>
+  <script src="./classes.js"></script>
 </body>
 
 </html>
