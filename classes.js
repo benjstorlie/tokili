@@ -17,6 +17,7 @@ window.onload = function () {
 
   if (view === "editor.html") {
     board.renderAllCards();
+    board.renderEditorEventListeners();
   }
 
 }
@@ -67,15 +68,22 @@ const newID = (length = 8) => {
   }
 }
 
-/**
- * returns the html text for an emoji in an `<i>` tag with class .btn-symbol
- * @param {string} unicodeCode - unicode for emoji
- * @param {string} [attributes] - any extra html attributes to include in the `<i>` tag 
- * @returns {string}
- */
-function emoji(unicodeCode,attributes='') {
-  return `<i class="btn-symbol" role='icon' ${attributes}>&#x${unicodeCode};</i>`
-} 
+const utils = {
+  /**
+   * returns the html text for an emoji in an `<i>` tag with class .btn-symbol
+   * @param {string} unicodeCode - unicode for emoji
+   * @param {string} [attributes] - any extra html attributes to include in the `<i>` tag 
+   * @returns {string}
+   */
+  emoji(unicodeCode,attributes='') {
+    return `<i class="btn-symbol" role='icon' ${attributes}>&#x${unicodeCode};</i>`
+  } ,
+
+   speak(term) {
+    let utterance = new SpeechSynthesisUtterance(term);
+    speechSynthesis.speak(utterance);
+  }
+}
 
 /**
  * The structure of the object in local storage in key `tokili-board-${this.id}`
@@ -186,12 +194,22 @@ class Board {
   }
 
   renderEditorEventListeners() {
-    $("#heading-btn").click(() => {
+    $("#heading-btn").on( "click", () => {
       this.heading.showCard()
     });
-    $("#add-card-btn").click(() => {
+    $("#add-card-btn").on( "click", () => {
       this.addCard();
     });
+    $("#save-board-btn").on( "click", () => {
+      this.storeAll( () => {
+        console.log("saved!")
+      });
+    })
+    $("#board-title-form").on("submit" , (e) => {
+      e.preventDefault();
+      this.title = $("#board-title-input").val();
+      this.store();
+    })
   }
 
   addCard() {
@@ -273,30 +291,25 @@ class Card {
           <div class="input-group">
             <div class="input-group-prepend">
               <button id="#speak-${this.id}" class="btn btn-secondary btn-speak">
-                ${emoji("1F4AC")}
+                ${utils.emoji("1F4AC")}
               </button>
             </div>
-            <input type="text" class="form-control" placeholder="add title" data-id="${this.id}" ${(this.title ? `value="${this.title}"` : "")}>
+            <input id="title-${this.id} "type="text" class="form-control" placeholder="add title" data-id="${this.id}" ${(this.title ? `value="${this.title}"` : "")}>
           </div>
         </form>
         <button data-id="${this.id}" type="button" class="close delete-card" aria-label="Delete Card">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div id="img-${this.id}" data-id="${this.id}" role="button" class="btn btn-outline-primary img-card img-div" data-toggle="modal" data-target="#modal-${this.id}">
-        <button data-id="${this.id}" type="button" class="close delete-img" aria-label="Delete Image">
+      <div id="img-${this.id}" data-id="${this.id}" role="button" class="btn btn-outline-primary img-card img-div" data-toggle="modal" data-target="#modal-${this.id}" ${ this.src ? `style="background-image: url('${this.src}')"` : ""}>
+        <button data-id="${this.id}" type="button" class="close delete-img ${this.src ? "" : "d-none" }" aria-label="Delete Image">
           <span aria-hidden="true">&times;</span>
         </button>
+        <div class="add-img-message ${this.src ? "d-none" : ""}">
+        <h4>Click to add an image!</h4> ${utils.emoji("2795","style='font-size:4rem'")}</div>
       </div>
     </div>
     ` );
-
-    if (!this.src) {
-      image.html("<h4>Click to add an image!</h4>"+emoji("2795","style='font-size:4rem'"));
-      $(`#delete-img-${this.id}`).addClass("d-none");
-    } else {
-      image.css("background-image",`url("${this.src}")`);
-    }
 
     $("#card-deck").append(card);
   }
@@ -344,23 +357,23 @@ class Card {
   renderCardEventListeners() {
     let card = this.card;
 
-    card.find("form").submit((e) => {
+    card.find("form").on("submit",(e) => {
       e.preventDefault();
       this.setCardTitle( card.find("input").val()  );
     })
 
-    card.find(".btn-speak").click(() => {
-        speak( card.find("input").val() );
+    card.find(".btn-speak").on( "click", () => {
+        utils.speak( card.find("input").val() );
       });
     
-    card.find(".img-card").click(() => {
+    card.find(".img-card").on( "click", () => {
       this.preShowModal();
       this.modal.modal('show');
     });
     
-    card.find(".delete-card").click(() => this.hideCard());
+    card.find(".delete-card").on( "click", () => this.hideCard());
 
-    card.find(".delete-img").click((e) => {
+    card.find(".delete-img").on( "click", (e) => {
       e.stopPropagation();
       this.deleteImage()
     } );
@@ -369,16 +382,16 @@ class Card {
   renderModalEventListeners() {
     let modal = this.modal;
     // attach submit event handler
-    modal.find("form").submit( () => {
+    modal.find("form").on("submit", (e) => {
       e.preventDefault();
       modal.find(".card-body").empty();
       this.fetchPicture(modal.find("input").val())
     });
 
     // close button
-    modal.find("button[data-dismiss='modal']").click(() => modal.modal("hide") )
+    modal.find("button[data-dismiss='modal']").on( "click", () => modal.modal("hide") )
 
-    modal.find(".save-img-btn").click((e) => this.saveNewImg($(e.target).data("src")));
+    modal.find(".save-img-btn").on( "click", (e) => this.saveNewImg($(e.target).data("src")));
   }
 
   setCardTitle( newTitle ) {
@@ -400,10 +413,9 @@ class Card {
 
   deleteImage() {
     this.src = "";
-    this.card.find(".img-div")
-      .html("<h4>Click to add an image!</h4>"+emoji("2795","style='font-size:4rem'"))
-      .css("background-image","");
-      this.card.find(".delete-img").addClass("d-none");
+    this.card.find(".img-div").css("background-image","");
+    this.card.find(".add-img-message").removeClass("d-none")
+    this.card.find(".delete-img").removeClass("d-none");
     this.store();
   }
 
@@ -416,7 +428,9 @@ class Card {
     this.modal.modal("hide");
 
     // re-set the image in the card
-    this.card.find(".img-div")
+    this.card.find(".img-div").style(`background-image: url('${this.src}')`)
+
+    this.card.find("delete-img").removeClass("d-none");
   }
 
   preShowModal() {
@@ -427,7 +441,7 @@ class Card {
       const cardInputVal = this.card.find("input").val();
       if (cardInputVal) {
         modalInput.val(cardInputVal);
-        fetchPicture(cardInputVal);
+        this.fetchPicture(cardInputVal);
       }
     }
   }
@@ -440,7 +454,7 @@ class Card {
 
     if (!term) {return}
 
-    this.modal.find(".card-body").append(`<span>Search for ${term}</span>`)
+    this.modal.find(".card-body").append($(`<span>Search for ${term}</span>`))
   }
 
 }
@@ -467,7 +481,15 @@ class Heading extends Card {
   }
 
   renderCard() {
-    return
+    this.show
+      ? this.showCard()
+      : this.hideCard();
+    if (this.src) {
+      this.card.find(".img-div").style(`background-image: url('${this.src}')`);
+    } else {
+      this.card.find(".add-img-message").removeClass("d-none");
+      this.card.find(".delete-img").addClass("d-none");
+    }
   }
 
   renderModal() {
