@@ -432,7 +432,7 @@ class Card {
       this.store();
         
       // re-set the image in the card
-      this.card.find(".img-div").style(`background-image: url('${this.src}')`)
+      this.card.find(".img-div").css("background-image", `url('${this.src}')`);
 
       this.card.find("delete-img").removeClass("d-none");
     }
@@ -493,7 +493,7 @@ class Heading extends Card {
       ? this.showCard()
       : this.hideCard();
     if (this.src) {
-      this.card.find(".img-div").style(`background-image: url('${this.src}')`);
+      this.card.find(".img-div").css("background-image", `url('${this.src}')`);
     } else {
       this.card.find(".add-img-message").removeClass("d-none");
       this.card.find(".delete-img").addClass("d-none");
