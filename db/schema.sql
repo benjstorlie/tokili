@@ -1,0 +1,2 @@
+DROP DATABASE IF EXISTS tokili_db;
+CREATE DATABASE tokili_db;
