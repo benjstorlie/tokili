@@ -3,26 +3,13 @@ const { Board, User} = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
-    const {title, body, tagIds} = req.body;
-    const blogpost = await Blogpost.create({
-      title,
-      body,
+    const { title } = req.body;
+    const board = await Board.create({
+      title, 
       userId: req.session.userId,
     });
 
-    const tags = await Tag.findAll({where: {id: tagIds}});
-
-    if (tags.length != tagIds.length) {
-      res
-        .status(404)
-        .json({ message: `Some tag ids were not found.` });
-      return;
-    }
-
-    await blogpost.setTags(tags);
-    await blogpost.save()
-
-    res.status(200).json(blogpost);
+    res.status(200).json(board);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -48,10 +35,15 @@ const get = {
 }
 
 const post = {
-  async new(req,res) {
+  async new(req, res) {
     try {
       const { title } = req.body;
-
+      const board = await Board.create({
+        title, 
+        userId: req.session.userId,
+      });
+  
+      res.status(200).json(board);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -68,10 +60,18 @@ const post = {
         ],
       });
       if (!origBoard) {
-        res.status(404).json({message: 'Board not found.'})
+        res.status(404).json({message: 'Board not found.'});
+        return;
       }
-
+      const newBoard = await Board.create({
+        title: title || origBoard.title + ' copy',
+        userId: req.session.userId,
+      })
       
+      const heading = await Card.create({
+        title: origBoard.heading.title,
+        
+      })
 
     } catch (err) {
       res.status(500).json(err);

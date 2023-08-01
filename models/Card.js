@@ -11,16 +11,8 @@ Card.init(
       primaryKey: true,
       autoIncrement: true,
     },
-    body: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    boardId: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: 'board',
-        key: 'id',
-      },
+    title: {
+      type: DataTypes.String,
     },
   },
   {

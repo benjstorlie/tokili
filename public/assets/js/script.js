@@ -119,45 +119,30 @@ class Board {
     }
   }
 
-  static retrieve(boardId) {
+  /**
+   * Save board in database
+   * @returns {Promise}
+   */
+  store(cb) {
     try {
-      const board = new Board(JSON.parse(localStorage.getItem(`tokili-board-${boardId}`)));
-      board.cards.forEach((cardId,index) => {
-        board.cards[index] = index === 0 ? Heading.retrieve(cardId) : Card.retrieve(cardId)
-      })
-      return board;
+
     } catch {
-      throw new Error("Could not retrieve board "+boardId);
+
     }
   }
 
   /**
-   * Set in Local Storage, with key `tokili-board-${this.id}`
-   * @param {function} [cb] - callback function
+   * Save board and save its heading and cards in database
+   * @returns {Promise}
    */
-  store(cb) {
-    localStorage.setItem(
-      `tokili-board-${this.id}`,
-      JSON.stringify({
-        id: this.id,
-        title: this.title,
-        cards: this.cards.map(card => `tokili-card-${card.id}`), // store cards by their ids 
-      })
-    );
-    if (cb) {cb()}
-  }
+    storeAll() {
+      try {
+  
+      } catch {
+  
+      }
+    }
 
-    /**
-   * Set in Local Storage, with key `tokili-board-${this.id}` AND store each card as well.
-   * @param {function} [cb] - callback function
-   */
-  storeAll(cb) {
-    this.store();
-    this.cards.forEach(card => {
-      card.store();
-    });
-    if (cb) {cb()}
-  }
 
   /**
    * @returns {JQuery} - html
