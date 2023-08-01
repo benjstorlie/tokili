@@ -357,22 +357,27 @@ class Card {
   renderCardEventListeners() {
     let card = this.card;
 
+    // The form element contains the input text element that displays the card's word/phrase.
     card.find("form").on("submit",(e) => {
       e.preventDefault();
       this.setCardTitle( card.find("input").val()  );
     })
 
+    // This is the little speech button to show what it sounds like.  This is the same function that is called when clicking on the whole card in deploy mode.
     card.find(".btn-speak").on( "click", () => {
         utils.speak( card.find("input").val() );
       });
     
-    card.find(".img-card").on( "click", () => {
+    // Clicking on the image itself opens the modal to choose your picture.  
+    card.find(".img-div").on( "click", () => {
       this.preShowModal();
       this.modal.modal('show');
     });
     
+    // This deletes the whole card.
     card.find(".delete-card").on( "click", () => this.hideCard());
 
+    // This just re-sets the image to blank.
     card.find(".delete-img").on( "click", (e) => {
       e.stopPropagation();
       this.deleteImage()
@@ -384,14 +389,14 @@ class Card {
     // attach submit event handler
     modal.find("form").on("submit", (e) => {
       e.preventDefault();
-      modal.find(".card-body").empty();
+      modal.find(".modal-body").empty();
       this.fetchPicture(modal.find("input").val())
     });
 
     // close button
     modal.find("button[data-dismiss='modal']").on( "click", () => modal.modal("hide") )
 
-    modal.find(".save-img-btn").on( "click", (e) => this.saveNewImg($(e.target).data("src")));
+    modal.find(".save-img-btn").on( "click", (e) => this.saveNewImg());
   }
 
   setCardTitle( newTitle ) {
@@ -419,18 +424,21 @@ class Card {
     this.store();
   }
 
-  saveNewImg(src) {
-    // set new image src and save in local storage
-    this.src = src;
-    this.store();
+  saveNewImg() {
+    if (this.newSrc) {
+      // set new image src and save in local storage
+      this.src = this.newSrc;
+      this.newSrc = "";
+      this.store();
+        
+      // re-set the image in the card
+      this.card.find(".img-div").style(`background-image: url('${this.src}')`)
+
+      this.card.find("delete-img").removeClass("d-none");
+    }
 
     // close the modal
     this.modal.modal("hide");
-
-    // re-set the image in the card
-    this.card.find(".img-div").style(`background-image: url('${this.src}')`)
-
-    this.card.find("delete-img").removeClass("d-none");
   }
 
   preShowModal() {
@@ -454,7 +462,7 @@ class Card {
 
     if (!term) {return}
 
-    this.modal.find(".card-body").append($(`<span>Search for ${term}</span>`))
+    this.modal.find(".modal-body").append($(`<span>Search for ${term}</span>`))
   }
 
 }
