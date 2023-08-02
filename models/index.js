@@ -41,16 +41,12 @@ Card.belongsTo(Board, {
 // **********
 
 // Card has a many-to-many association with Symbol
-Card.belongsToMany(Symbol, {
-  through: 'CardSymbol', // Name of the join table
-  foreignKey: 'card_id', // Foreign key in the join table referring to Card
-  otherKey: 'symbol_id', // Foreign key in the join table referring to Symbol
+Card.belongsTo(Symbol, {
+  foreignKey: 'symbol_id', 
 });
 
-Symbol.belongsToMany(Card, {
-  through: 'CardSymbol', // Name of the join table
-  foreignKey: 'symbol_id', // Foreign key in the join table referring to Symbol
-  otherKey: 'card_id', // Foreign key in the join table referring to Card
+Symbol.hasMany(Card, {
+  onDelete: 'SET NULL'
 });
 // **********
 

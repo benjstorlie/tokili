@@ -1,4 +1,4 @@
-const { Model, DataTypes, fn , col } = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/connection');
 
 class Card extends Model {}
@@ -12,7 +12,23 @@ Card.init(
       autoIncrement: true,
     },
     title: {
-      type: DataTypes.String,
+      type: DataTypes.STRING,
+    },
+    board_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'board',
+        key: 'id',
+      },
+    },
+    symbol_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'symbol',
+        key: 'id',
+      },
     },
   },
   {

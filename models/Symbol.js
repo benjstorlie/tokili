@@ -1,11 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database');
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../config/connection');
 
-const Symbol = sequelize.define('Symbol', 
+class Symbol extends Model {}
+
+Symbol.init(
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
+      allowNull: false,
+      // The id will come from the Open Symbols API
     },
     symbol_key: {
       type: DataTypes.STRING,
@@ -37,13 +41,13 @@ const Symbol = sequelize.define('Symbol',
     repo_key: {
       type: DataTypes.STRING,
     },
-    hc: {
+    hc: {  // high contrast
       type: DataTypes.BOOLEAN,
     },
-    protected_symbol: {
-      type: DataTypes.BOOLEAN,
-    },
-    extension: {
+    // protected_symbol: {
+    //   type: DataTypes.BOOLEAN,
+    // },
+    extension: {  // png, svg, ...
       type: DataTypes.STRING,
     },
     image_url: {
@@ -52,7 +56,7 @@ const Symbol = sequelize.define('Symbol',
     search_string: {
       type: DataTypes.STRING,
     },
-    unsafe_result: {
+    unsafe_result: {  // for safesearch on or off.
       type: DataTypes.BOOLEAN,
       default: false,
     },
@@ -74,3 +78,6 @@ const Symbol = sequelize.define('Symbol',
     modelName: 'symbol',
   }
 );
+
+
+module.exports = Symbol;
