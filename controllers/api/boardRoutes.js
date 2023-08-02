@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
       userId: req.session.userId,
     });
 
-    res.status(200).json(board);
+    res.status(200).json({message: "Success", board});
   } catch (err) {
     res.status(500).json(err);
   }
@@ -60,7 +60,7 @@ const post = {
         ],
       });
       if (!origBoard) {
-        res.status(404).json({message: 'Board not found.'});
+        res.status(404).json({error: 'Board not found.'});
         return;
       }
 
@@ -118,15 +118,21 @@ const post = {
 }
 
 const put = {
+  // '/cards/:cardId'
   async update(req, res) {
     try {
+      const card_id = req.params.cardId;
+  
+      card = await Card.update( req.body ,{where: {id: card_id}});
+      res.status(200).json(card);
 
-    } catch (err) {
-      res.status(500).json(err);
+    } catch (error) {
+      console.error('Error updating card:', error.message);
+      res.status(500).json({ error: 'Failed update card.' });
     }    
   },
 // '/cards/:cardId/symbol'
-  async assignSymbol(req, res) {
+  async assignCardSymbol(req, res) {
     try {
       const card_id = req.params.cardId;
       const { details_url } = req.body; 
@@ -149,6 +155,32 @@ const put = {
     } catch (error) {
       console.error('Error assigning symbol to card:', error.message);
       res.status(500).json({ error: 'Failed to assign symbol to card' });
+    }
+  },
+  // '/boards/:boardId/symbol'
+  async assignBoardSymbol(req, res) {
+    try {
+      const board_id = req.params.boardId;
+      const { details_url } = req.body; 
+
+      // Fetch the symbol object from the external API using symbol_key and id
+      const apiUrl = `https://www.opensymbols.org/api/v2`+details_url;
+      const response = await axios.get(apiUrl);
+      const symbolData = response.data; // response contains the symbol object
+
+      // Create a Symbol record in the database if it doesn't exist already
+      const [symbol, created] = await Symbol.findOrCreate({
+        where: { id: symbolData.id },
+        defaults: symbolData,
+      });
+
+      // Associate the Symbol with the Board by updating the Board record
+      await Board.update({ symbol_id: symbol.id }, { where: { id: board_id } });
+
+      res.json({ success: true, message: 'Symbol assigned to Board successfully' });
+    } catch (error) {
+      console.error('Error assigning symbol to board:', error.message);
+      res.status(500).json({ error: 'Failed to assign symbol to board' });
     }
   },
 }
