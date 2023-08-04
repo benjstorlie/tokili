@@ -1,14 +1,18 @@
-    <div id="board-title-area" class="row">
+    <div id="board-info-area" class="row">
       <div  class="col-12">
-        <form id="board-title-form">
+        <form id="board-info-form">
           <input type="text" class="form-control" placeholder="add board title" id="board-title-input" {{#if title}}value="{{title}}"{{/if}}>
         </form>
+        <div id="symbol-board" role="button" class="btn btn-outline-primary img-div" data-toggle="modal" data-target="#modal-board" {{#if symbol}}style="background-image: url('{{symbol.image_url}}')"{{/if}}></div>
+        <button data-id="board" type="button" class="close delete-symbol d-none" aria-label="Delete Symbol">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     </div>
 
     <div class="row flex-grow-1 bg-dark">
       <div class="col-2 d-flex flex-column justify-content-center">
-        <!-- Menu goes here -->
+        {{!-- <!-- Menu goes here --> --}}
         <div class="btn-group-vertical d-flex flex-column nav-container" role="group">
           <div role="button" type="button" class="btn btn-lg btn-primary" onclick="gotoHomePage()">
             <i class="btn-symbol " role="icon">&#x1F519;</i>
@@ -29,10 +33,10 @@
       </div>
       
       <div id="editor" class="col d-flex flex-column bg-dark ">
-         <!-- Editor goes here -->
+         {{!-- <!-- Editor goes here --> --}}
 
         <div id="heading-area" class="d-flex"> 
-          <!-- Either heading-card editor, or add heading button -->
+          {{!-- <!-- Either heading-card editor, or add heading button --> --}}
           <div class="card my-1 d-flex flex-row d-none" id="heading">
             <div class="card-left-sider">
               <form id="form-heading">
@@ -48,11 +52,11 @@
             <button id="delete-heading" type="button" class="close" aria-label="Delete">
               <span aria-hidden="true">&times;</span></button>
             </div>
-            <div id="img-heading" role="button" class="btn btn-outline-primary img-heading img-div" data-toggle="modal" data-target="#modal-heading">
-              <button data-id="heading" type="button" class="close delete-img d-none" aria-label="Delete Image">
+            <div id="symbol-heading" role="button" class="btn btn-outline-primary symbol img-div" data-toggle="modal" data-target="#modal-heading">
+              <button data-id="heading" type="button" class="close delete-symbol d-none" aria-label="Delete Symbol">
                 <span aria-hidden="true">&times;</span>
               </button>
-              <div class="add-img-message d-none"><h4>Click to add an image!</h4> <i class="btn-symbol " role="icon" style='font-size:4rem'>&#x2795;</i></div>
+              <div class="add-img-message d-none"><h4>Click to add a symbol!</h4> <i class="btn-symbol " role="icon" style='font-size:4rem'>&#x2795;</i></div>
             </div>
           </div>
 
@@ -62,19 +66,46 @@
       
         <div id="card-deck" class="card-deck h-100 w-100 flex-grow-1 d-flex flex-wrap" style="display: flex; justify-content: space-around; align-items: center;">
 
-        <!-- Somehow accommodate for variable numbers of cards -->
+        {{#each cards as |card|}}
+
+    <div class="card m-1" id="card-{{card.id}}" data-show="{{card.show}}" data-id="{{card.id}}">
+      <div class="card-header d-flex flex-row">
+        <form id="form-{{card.id}}" data-id="{{card.id}}" class="flex-grow-1">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <button id="#speak-{{card.id}}" class="btn btn-secondary btn-speak">
+                {{ emoji "1F4AC" "style='font-size:4rem'" }}
+              </button>
+            </div>
+            <input id="title-${this.id} "type="text" class="form-control" placeholder="add title" data-id="{{card.id}}" {{#if card.title}}value="{{card.title}}"{{/if}}>
+          </div>
+        </form>
+        <button data-id="{{card.id}}" type="button" class="close delete-card" aria-label="Delete Card">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="symbol-{{card.id}}" data-id="{{card.id}}" role="button" class="btn btn-outline-primary symbol img-card img-div" data-toggle="modal" data-target="#modal-{{card.id}}" {{#if card.symbol}} style="background-image: url('{{card.symbol.image_url}}')"{{/if}}>
+        <button data-id="{{card.id}}" type="button" class="close delete-symbol {{#unless card.symbol}}d-none{{/unless}}" aria-label="Delete Symbol">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="add-img-message {{#if card.symbol}}d-none{{/if}}">
+        <h4>Click to add an image!</h4> {{ emoji "2795" "style='font-size:4rem'" }}</div>
+      </div>
+    </div>
+
+        {{/each}}
         </div>
 
       </div>
     </div>
   
 
-    <!-- Heading Modal -->
+    {{!-- <!-- Heading Modal --> --}}
     <div class="modal fade" id="modal-heading" data-id="heading" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header flex-wrap sticky-top">
-            <h4 class="modal-title">Add Image</h4>
+            <h4 class="modal-title">Add Symbol</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -87,7 +118,31 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary save-img-btn" id="saveImgBtn-heading" data-id="heading">Save</button>
+            <button type="button" class="btn btn-primary save-symbol-btn" id="saveSymbolBtn-heading" data-id="heading">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{!-- Board Modal --}}
+    <div class="modal fade" id="modal-board" data-id="board" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header flex-wrap sticky-top">
+            <h4 class="modal-title">Add Symbol</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="w-100"></div>
+            <form id="modal-form-board" data-id="board" class="d-block">
+            <input type="text" class="form-control" id="search-input-board" data-id="board" placeholder="search">
+            </form>
+          </div>
+          <div id="modal-body-board" class="modal-body overflow-auto" data-id="board">
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary save-symbol-btn" id="saveSymbolBtn-board" data-id="board">Save</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>

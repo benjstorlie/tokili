@@ -61,5 +61,4 @@ Symbol.hasOne(Board, {
 })
 // **********
 
-
 module.exports = { User, Board, Card, Symbol };

@@ -1,10 +1,10 @@
 const router = require('express').Router();
 
-const {router: apiRoutes} = require('./api');
-const homeRoutes = require('./homeRoutes');
+const api = require('./api');
+const renderPages = require('./renderPages');
 
-router.use('/', homeRoutes);
-router.use('/api', apiRoutes);
+router.use('/', renderPages);
+router.use('/api', api);
 
 
 // 404 error page

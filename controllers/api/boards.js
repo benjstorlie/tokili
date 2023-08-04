@@ -49,9 +49,11 @@ const post = {
     }
   },
 
+  // '/boards/:boardId/copy'
   async copy(req,res) {
     try {
-      const { title , board_id } = req.body;
+      const { title } = req.body;
+      const board_id = req.params.boardId;
 
       const origBoard = Board.findByPk(board_id, {
         include: [

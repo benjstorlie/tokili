@@ -36,7 +36,7 @@ function retrieveBoard() {
     board.storeAll( () => location.replace(`./editor.html?board=${board.id}`) );
   } else {
     try {
-      return  Board.retrieve(boardId);
+      return Board.retrieve(boardId);
     } catch {
       const board = new Board({id: boardId});
       board.storeAll( );
@@ -55,22 +55,9 @@ function deploy() {
   location.assign("./deploy.html"+location.search);
 }
 
-/**
- * Get a random ID
- * @param {number} [length] - length of ID 
- * @returns {string}
- */
-const newID = (length = 8) => {
-  try {
-    return crypto.randomUUID().slice(-1*length);
-  } catch {
-    return String(new Date().getTime()).slice(-1*length);
-  }
-}
-
 const utils = {
   /**
-   * returns the html text for an emoji in an `<i>` tag with class .btn-symbol
+   * returns the html text for an emoji in an `<i>` tag with class .btn-symbol.  This function is also included in the Handlebars helpers.
    * @param {string} unicodeCode - unicode for emoji
    * @param {string} [attributes] - any extra html attributes to include in the `<i>` tag 
    * @returns {string}
@@ -79,70 +66,93 @@ const utils = {
     return `<i class="btn-symbol" role='icon' ${attributes}>&#x${unicodeCode};</i>`
   } ,
 
-   speak(term) {
+  /**
+   * Use text-to-speech to speak word or phrase aloud.  See https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+   * @param {string} term - the word or phrase to speak
+   */
+  speak(term) {
     let utterance = new SpeechSynthesisUtterance(term);
     speechSynthesis.speak(utterance);
   }
 }
 
 /**
- * The structure of the object in local storage in key `tokili-board-${this.id}`
- * @typedef BoardStore
- * @prop {string} id - board's id number
- * @prop {string} title - title of board
- * @prop {string[]} cards - array of card key ids, in the form `tokili-card-${this.cardId}`, the key they're saved in localstorage under
+ * @typedef Symbol
+ * @prop {string} id - id in database
+ * @prop {string} image_url - the actual image source url
+ * @prop {string} details_url - reference to Open Symbols API to get all their data on the symbol
 */
 
 /**
  * @class
  * @prop {string} id - board's id number
- * @prop {string} title - title of board
- * @prop {Card[]} cards - array of Card instances, cards[0] is the heading.
+ * @prop {string} [title] - title of board
+ * @prop {Heading} [heading] - The heading card - the Heading model extends the Card model
+ * @prop {Card[]} [cards] - array of Card instances
+ * @prop {Symbol} [symbol] - the symbol for the board itself
+ * @prop {string} [username] - the username associated with the user_id with the board's user_id in the database
  */
 class Board {
   constructor(data={}) {
-    this.id = data.id || newID();
-    this.title = data.title || "";
-    this.cards = data.cards || [ new Heading({show: false})]; 
+    // data will be generated from the API upon creation of a new Board in the database, or upon retrieval of an existing board.
   }
-
-  /**
-   * The heading is the card at index 0.  It should always be present, even as a blank card.
-   * @returns {Heading}
-   */
-  get heading() {
-    if (this.cards[0]) {
-      return this.cards[0];
-    } else {
-      this.cards[0] = new Heading({show: false});
-      return this.cards[0];
-    }
-  }
-
-  /**
-   * Save board in database
-   * @returns {Promise}
-   */
-  store(cb) {
+  static async retrieve(id) {
     try {
-
-    } catch {
-
+      const response = await fetch(`/boards/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to retrieve board');
+      }
+      const boardData = await response.json();
+      return new Board( boardData );
+    } catch (error) {
+      console.error('Error retrieving board:', error.message);
+      throw error;
     }
   }
 
-  /**
-   * Save board and save its heading and cards in database
-   * @returns {Promise}
-   */
-    storeAll() {
-      try {
-  
-      } catch {
-  
+  static async create(data) {
+    try {
+      const response = await fetch(`/boards/`, { 
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to retrieve board');
       }
+      const boardData = await response.json();
+      return new Board( boardData );
+    } catch (error) {
+      console.error('Error retrieving board:', error.message);
+      throw error;
     }
+  }  
 
+  static async copy(boardId, title) {
+    try {
+      const response = await fetch(`/boards/${boardId}/copy`, { 
+        method: 'POST',
+        body: JSON.stringify({ title }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to retrieve board');
+      }
+      const boardData = await response.json();
+      return new Board( boardData );
+    } catch (error) {
+      console.error('Error retrieving board:', error.message);
+      throw error;
+    }
+  }
+
+  async save() {
+
+  }
+
+  async saveAll() {
+
+  }
 
   /**
    * @returns {JQuery} - html
@@ -151,7 +161,7 @@ class Board {
     return $( `
     <div class="card board-card m-1" data-id="${this.id}">
       <div style="display: flex; align-self: center; text-align: center; height: 20vh; width: 28vw; max-width: fit-content;">
-        <img class="img-page-card card-img-top" style="height: 100%; width: 100%;" src="${this.menuImgSrc}">
+        <img class="img-page-card card-img-top" style="height: 100%; width: 100%;" src="${this.symbol.image_url}">
       </div>
       <div class="card-footer" style="text-align: center;">
         <h5 class="card-title" style="font-size: 2.5vw;">
@@ -162,44 +172,31 @@ class Board {
     ` )
   }
 
-  get menuImgSrc() {
-    // Get heading img src.
-    // Else get one of the cards' img src
-    // Else default img
-    return "./assets/images/img-sample.png"
-  }
-
-  /**
-   * Render Card and render Modal for each card (apart from the heading, since those are pre-rendered);
-   */
-  renderAllCards() {
-    this.cards.forEach((card) => {
-      card.renderAll();
-    })
-  }
-
   renderEditorEventListeners() {
     $("#heading-btn").on( "click", () => {
       this.heading.showCard()
     });
+
     $("#add-card-btn").on( "click", () => {
       this.addCard();
     });
-    $("#save-board-btn").on( "click", () => {
-      this.storeAll( () => {
+
+    $("#save-board-btn").on( "click", async () => {
+      this.saveAll( () => {
         console.log("saved!")
       });
-    })
-    $("#board-title-form").on("submit" , (e) => {
+    });
+
+    $("#board-title-form").on("submit" , async (e) => {
       e.preventDefault();
       this.title = $("#board-title-input").val();
-      this.store();
-    })
+      await this.save();
+    });
   }
 
   addCard() {
     // see if there's a hidden card first
-    let card = this.cards.find( (card, index) => !card.show && index>0 );
+    let card = this.cards.find( (card) => !card.show );
     if ( card ) {
       card.showCard();
     } else {
@@ -216,19 +213,11 @@ class Board {
 /**
  * @class
  * @prop {string} id - the card's id
- * @prop {string} title - the word or words that label the symbol
- * @prop {string} src - url of the image
+ * @prop {string} [title] - the word or words that label the symbol
  * @prop {boolean} show - if false, hide the card
+ * @prop {Symbol} [symbol] - symbol details
  */
 class Card {
-  /**
-   * create new card, or parse card data from local storage
-   * @param {object} data - Any data the new card should come with, if coming from localstorage, it should be complete
-   * @param {string} data.id - the card's id
-   * @param {string} data.title - the word or words that label the symbol
-   * @param {string} data.src - url of the image
-   * @param {boolean} data.show - if false, hide the card
-   */
   constructor(data={}) {
     this.id = data.id || newID();
     this.title = data.title || "";
@@ -236,29 +225,40 @@ class Card {
     this.show = data.show !== undefined ? data.show : true;
   }
 
-  static retrieve(key) {
-    if (!key.startsWith("tokili-card-")) {
-      key = "tokili-card-"+key;
-    }
+  static async retrieve(id) {
     try {
-      return new Card(JSON.parse(localStorage.getItem(key)));
-    } catch {
-      return new Card({id: key.slice(12)}).store();
+      const response = await fetch(`/boards/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to retrieve board');
+      }
+      const boardData = await response.json();
+      return new Board( boardData );
+    } catch (error) {
+      console.error('Error retrieving board:', error.message);
+      throw error;
     }
   }
 
-  store() {
-    localStorage.setItem(
-      `tokili-card-${this.id}`,
-      JSON.stringify({
-        id: this.id,
-        boardId: this.boardId,
-        title: this.title,
-        show: this.show,
-        src: this.src
-      })
-    );
-    return this
+  static async create(data) {
+    try {
+      const response = await fetch(`/boards/`, { 
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to retrieve board');
+      }
+      const boardData = await response.json();
+      return new Board( boardData );
+    } catch (error) {
+      console.error('Error retrieving board:', error.message);
+      throw error;
+    }
+  } 
+
+  save() {
+
   }
 
   renderAll() {
