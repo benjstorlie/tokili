@@ -1,43 +1,22 @@
 {
   "name": "tokili",
-  "version": "1.0.0",
-  "description": "Share your thoughts and opinions about tech!  Write your own blogposts and leave your comments on others'.",
-  "main": "server.js",
+  "version": "2.0.0",
+  "description": "AAC",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon server.js",
-    "start": "node server.js",
-    "seed": "node seeds/seed.js"
+    "start": "concurrently \"npm run start:client\" \"npm run start:backend\"",
+    "start:frontend": "cd client && npm start",
+    "start:backend": "cd server && npm start"
   },
-  "keywords": [
-    "blog",
-    "journal",
-    "comment",
-    "social media",
-    "blogpost",
-    "database",
-    "tech",
-    "tech news"
-  ],
+  "keywords": [],
   "repository": {
     "type": "git",
-    "url": "git@github.com:benjstorlie/tech-blog.git"
+    "url": "git@github.com:benjstorlie/tokili.git"
   },
   "author": "Ben Storlie <benjstorlie@gmail.com> (https://benjstorlie.github.io/)",
   "license": "MIT",
   "dependencies": {
-    "axios": "^1.4.0",
-    "bcrypt": "^5.1.0",
-    "connect-session-sequelize": "^7.1.7",
-    "dotenv": "^8.2.0",
-    "express": "^4.18.2",
-    "express-handlebars": "^5.3.5",
-    "express-session": "^1.17.3",
-    "mysql2": "^2.3.3",
-    "nodemailer": "^6.9.4",
-    "sequelize": "^6.32.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.3"
+    "concurrently": "^8.2.0"
   }
 }
