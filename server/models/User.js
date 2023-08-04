@@ -29,10 +29,6 @@ User.init(
         isEmail: true,
       },
     },
-    isEmailConfirmed: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,  // Default true for development
-    },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
