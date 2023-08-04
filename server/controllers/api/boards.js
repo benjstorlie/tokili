@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Board, User} = require('../../models');
+const { Board } = require('../../models');
 
 router.post('/', async (req, res) => {
   try {
@@ -186,3 +186,5 @@ const put = {
     }
   },
 }
+
+module.exports = router;
