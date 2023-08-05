@@ -9,8 +9,6 @@ router.route('/:symbolId')
   .get(get.one)
   .put(put.update)
 
-router.put('/:cardId/symbol', put.assignBoardSymbol);
-
 const get = {
   async search(req,res) {
     try {
@@ -75,13 +73,10 @@ const post = {
       res.status(500).json(err);
     }
   },
-}
-
-const put = {
-// '/symbols'
-// I structured assigning symbols like this, because it is the same method to assign a symbol to a Board as to a Card
-// Maybe I could redefine this as a function that returns a function, and put these routes inside of /boards and /cards.
-  async assign(req, res) {
+    // '/symbols'
+    // I structured assigning symbols like this, because it is the same method to assign a symbol to a Board as to a Card
+    // And this is used in the Modal component, shared by Card and Board, as well
+    async assign(req, res) {
     try {
       // 
       const { details_url, element_id, type } = req.body; 
