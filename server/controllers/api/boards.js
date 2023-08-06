@@ -1,17 +1,7 @@
 const router = require('express').Router();
 const { Board, Card, User, Symbol } = require('../../models');
 
-router.route('/')
-  .post(post.new)
-  .get(get.all);
-
-router.route('/:boardId')
-  .get(get.one)
-  .put(put.update)
-
-router.post('/:boardId/copy', post.copy)
-
-router.put('/:boardId/symbol', put.assignBoardSymbol);
+// Scroll to the end to see the routes
 
 const get = {
   async all(req,res) {
@@ -136,5 +126,14 @@ const put = {
     }    
   },
 }
+
+
+router.post('/', post.new);
+router.get('/', get.all);
+
+router.get('/:boardId', get.one);
+router.put('/:boardId', put.update);
+
+router.post('/:boardId/copy', post.copy)
 
 module.exports = router;

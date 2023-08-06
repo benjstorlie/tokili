@@ -1,13 +1,7 @@
 const router = require('express').Router();
 const { Card } = require('../../models');
 
-router.route('/')
-  .post(post.new)
-  .get(get.all);
-
-router.route('/:cardId')
-  .get(get.one)
-  .put(put.update)
+// Scroll to the end to see the routes
 
 
 const get = {
@@ -60,5 +54,11 @@ const put = {
     }    
   },
 }
+
+router.post('/', post.new);
+router.get('/', get.all);
+
+router.get('/:cardId', get.one);
+router.put('/:cardId', put.update);
 
 module.exports = router;

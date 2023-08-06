@@ -1,13 +1,7 @@
 const router = require('express').Router();
 const { Card , Board, Symbol } = require('../../models');
 
-router.route('/')
-  .post(post.new)
-  .get(get.search);  // '?q=searchTerm'
-
-router.route('/:symbolId')
-  .get(get.one)
-  .put(put.update)
+// Scroll to the end to see the routes
 
 const get = {
   async search(req,res) {
@@ -110,5 +104,9 @@ const post = {
     }
   },
 }
+router.post('/new', post.new);
+router.post('/', post.assign);
+router.get('/', get.search);
+router.get('/:symbolId', get.one);
 
 module.exports = router;
