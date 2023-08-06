@@ -1,6 +1,30 @@
 import axios from 'axios';
 
-const search = async (query) =>
-  axios.get(`http://www.omdbapi.com/?t=${query}&rating=pg`);
+const postApiData = async (url, requestBody, successCallback, errorCallback) => {
+  try {
+    const response = await axios.post(url, requestBody);
+    successCallback(response.data);
+  } catch (error) {
+    errorCallback(error);
+  }
+};
 
-export default { search };
+const getSymbolSearch = async (searchTerm, successCallback, errorCallback) => {
+  try {
+    const response = await axios.get(`/api/symbols?q=${searchTerm}`, requestData);
+    successCallback(response.data);
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+const getBoard = async (boardId, successCallback, errorCallback) => {
+  try {
+    const response = await axios.get(`/api/symbols?q=${searchTerm}`, requestData);
+    successCallback(response.data);
+  } catch (error) {
+    errorCallback(error);
+  }
+};
+
+export { postApiData, getSymbolSearch };

@@ -11,6 +11,10 @@ const SymbolSelectionModal = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [symbols, setSymbols] = useState([]);  // Array of symbol objects retrieved from search
   const [selectedSymbol, setSelectedSymbol] = useState(null); // hold current selected symbol object
+  const [searchIsLoading, setSearchIsLoading] = useState(false);
+  const [searchError, setSearchError] = useState(null);
+  const [postSymbolIsLoading, setPostSymbolIsLoading] = useState(false);
+  const [postSymbolError, setPostSymbolError] = useState(null);
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +29,7 @@ const SymbolSelectionModal = ({
 
   // Pass props 'type' and 'elementId' to match what is recieved by the assign symbol route.
   // Submits `selectedSymbol`
-  const submitSymbol = async (symbol) => {
+  const postSymbol = async (symbol) => {
     try {
       const response = await fetch(`/api/symbols`, {
         method: 'POST',
@@ -87,7 +91,7 @@ const SymbolSelectionModal = ({
         variant="primary"
         onClick={() => {
           if (selectedSymbol) {
-            submitSymbol(selectedSymbol);
+            postSymbol(selectedSymbol);
           } else {
             onHide();
           }

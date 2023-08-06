@@ -125,7 +125,7 @@ const put = {
   // '/boards/:boardId'
   async update(req, res) {
     try {
-      const board_id = req.params.cardId;
+      const board_id = req.params.boardId;
   
       const board = await Board.update( req.body ,{where: {id: board_id}});
       res.status(200).json(board);

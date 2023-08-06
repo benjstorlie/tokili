@@ -5,7 +5,7 @@ router.route('/')
   .post(post.new)
   .get(get.all);
 
-router.route('/:boardId')
+router.route('/:cardId')
   .get(get.one)
   .put(put.update)
 
