@@ -16,9 +16,9 @@ Card.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    kind: {
-      type: DataTypes.ENUM('card','heading'),
-      defaultValue: 'card'
+    heading: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     board_id: {
       type: DataTypes.INTEGER,
@@ -49,16 +49,18 @@ Card.init(
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     freezeTableName: true,
     underscored: true,
     modelName: 'card',
     hooks: {
       beforeCreate: async (card,options) => {
         try {
-          if (card.kind === 'card') {
+          // Assuming if card.order is defined in the card creation that it is correct.
+          // isInteger would be false for null and undefined, but not 0.
+          if (!card.heading && !Number.isInteger(card.order)) {
             const highestOrderCard = await Card.findOne({
-              where: { board_id: card.board_id, kind: 'card' },
+              where: { board_id: card.board_id, heading: false },
               order: [['order', 'DESC']],
             });
         
