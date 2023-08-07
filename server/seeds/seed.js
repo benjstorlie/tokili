@@ -6,9 +6,13 @@ const { User, Card, Symbol, Board } = require('../models');
 const userSeeds = require('./userSeeds.json');
 const boardSeedData = require('./boardSeedData.json');
 
+const boardSeeds = require('./boardSeeds.json');
+const cardSeeds = require('./cardSeeds.json');
+const symbolSeeds = require('./symbolSeeds.json');
+
 const seedDatabase = async () => {
 
-  const { boardSeeds, cardSeeds, symbolSeeds, } = await restructureSeedData();
+  // const { boardSeeds, cardSeeds, symbolSeeds, } = await restructureSeedData();
 
   await sequelize.sync({ force: true });
 
@@ -16,6 +20,7 @@ const seedDatabase = async () => {
 
   await User.bulkCreate(userSeeds, {
     individualHooks: true,  // encrypts passwords
+    returning: true,
   });
 
   // Boards have Users and Symbols
@@ -24,6 +29,9 @@ const seedDatabase = async () => {
 
   await Card.bulkCreate(cardSeeds);
   // the restructuring function assigns "order" to the cards, so hooks not necessary, since that's the only card hook.
+
+  process.exit(0);
+
 }
 
 const createSymbol = async ( details_url ) => {
@@ -83,7 +91,9 @@ const restructureSeedData = async () => {
     cardSeeds.push(headingData);
 
     if (cards) {
-      cards.forEach( async (card,index) => {
+      // Wrap the card iteration in a Promise.all to wait for all card fetches
+
+      await Promise.all(cards.map( async (card,index) => {
         const cardData = {
           board_id: id,
           order: index,
@@ -100,18 +110,30 @@ const restructureSeedData = async () => {
         }
   
         cardSeeds.push(cardData);
-      });
+      }));
     }
   }
 
-  return {  boardSeeds, cardSeeds, symbolSeeds, }
+
+  return {  boardSeeds, cardSeeds, symbolSeeds: removeDuplicatesById(symbolSeeds), }
+}
+
+const removeDuplicatesById = (arr) => {
+  const uniqueIds = {}; // Object to keep track of unique IDs
+  return arr.filter(item => {
+    if (!uniqueIds[item.id]) {
+      uniqueIds[item.id] = true; // Mark ID as encountered
+      return true; // Include this item in the filtered array
+    }
+    return false; // Skip items with duplicate IDs
+  });
 }
 
 
 const writeSeedFiles = async () => {
   const { boardSeeds, cardSeeds, symbolSeeds, } = await restructureSeedData();
 
-  fs.writeFile('./boardSeeds', JSON.stringify(boardSeeds), 'utf8', (err) => {
+  fs.writeFile('./seeds/boardSeeds.json', JSON.stringify(boardSeeds, null, 2), 'utf8', (err) => {
     if (err) {
       console.error('Error writing boardSeeds JSON file:', err);
     } else {
@@ -119,7 +141,7 @@ const writeSeedFiles = async () => {
     }
   });
 
-  fs.writeFile('./cardSeeds', JSON.stringify(cardSeeds), 'utf8', (err) => {
+  fs.writeFile('./seeds/cardSeeds.json', JSON.stringify(cardSeeds, null, 2), 'utf8', (err) => {
     if (err) {
       console.error('Error writing cardSeeds JSON file:', err);
     } else {
@@ -127,7 +149,7 @@ const writeSeedFiles = async () => {
     }
   });
 
-  fs.writeFile('./symbolSeeds', JSON.stringify(symbolSeeds), 'utf8', (err) => {
+  fs.writeFile('./seeds/symbolSeeds.json', JSON.stringify(symbolSeeds, null, 2), 'utf8', (err) => {
     if (err) {
       console.error('Error writing symbolSeeds JSON file:', err);
     } else {
@@ -137,7 +159,7 @@ const writeSeedFiles = async () => {
 }
 
 
-// seedDatabase();
+seedDatabase();
 
-writeSeedFiles();
+// writeSeedFiles();
 

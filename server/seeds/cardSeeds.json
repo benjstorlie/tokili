@@ -1,0 +1,48 @@
+[
+  {
+    "board_id": 1,
+    "heading": true,
+    "show": false
+  },
+  {
+    "board_id": 1,
+    "order": 1,
+    "title": "No",
+    "symbol_id": 6626
+  },
+  {
+    "board_id": 1,
+    "order": 0,
+    "title": "Yes",
+    "symbol_id": 12523
+  },
+  {
+    "board_id": 2,
+    "heading": true,
+    "title": "How do you feel today?",
+    "symbol_id": 5166
+  },
+  {
+    "board_id": 2,
+    "order": 1,
+    "title": "tired",
+    "symbol_id": 9831
+  },
+  {
+    "board_id": 2,
+    "order": 0,
+    "title": "happy",
+    "symbol_id": 4900
+  },
+  {
+    "board_id": 2,
+    "order": 2,
+    "title": "mad",
+    "symbol_id": 933
+  },
+  {
+    "board_id": 3,
+    "heading": true,
+    "show": false
+  }
+]
