@@ -24,14 +24,14 @@ Board.init(
         key: 'id',
       },
     },
-    // symbol_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true,
-    //   references: {
-    //     model: 'symbol',
-    //     key: 'id',
-    //   },
-    // },
+    symbol_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'symbol',
+        key: 'id',
+      },
+    },
   },
   {
     sequelize,

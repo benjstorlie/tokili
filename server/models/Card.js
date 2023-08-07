@@ -19,23 +19,23 @@ Card.init(
       type: DataTypes.ENUM('card','heading'),
       default: 'card'
     },
-    // board_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true,
-    //   references: {
-    //     model: 'board',
-    //     key: 'id',
-    //   },
-    //   default: null,
-    // },
-    // symbol_id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: true,
-    //   references: {
-    //     model: 'symbol',
-    //     key: 'id',
-    //   },
-    // },
+    board_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'board',
+        key: 'id',
+      },
+      default: null,
+    },
+    symbol_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'symbol',
+        key: 'id',
+      },
+    },
     order: {
       type: DataTypes.INTEGER,
       allowNull: true,

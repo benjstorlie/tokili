@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Card } = require('../../models');
+const { Card , Symbol , Board } = require('../../models');
 
 // Scroll to the end to see the routes
 
@@ -8,15 +8,41 @@ const get = {
   async all(req,res) {
     try {
 
-      const cardData = Card.findAll()
+      const cardData = Card.findAll({
+        include: [
+          {model: Board},
+          {model: Symbol}
+        ]
+      })
+
+      if (!cardData.length) {
+        res.status(404).json({error: 'No cards found.'})
+        return
+      }
+
+      res.json(cardData);
 
     } catch (err) {
       res.status(500).json(err);
     }
   },
 
+  // '/cards/:cardId'
   async one(req,res) {
     try {
+      const cardData = Card.findByPk( req.params.cardId, {
+        include: [
+          {model: Board},
+          {model: Symbol}
+        ]
+      });
+
+      if (!cardData) {
+        res.status(404).json({error: 'Could not find card.'})
+        return
+      }
+
+      res.json(cardData)
 
     } catch (err) {
       res.status(500).json(err);
@@ -27,12 +53,11 @@ const get = {
 const post = {
   async new(req, res) {
     try {
-      const board = await Card.create({
+      const card = await Card.create({
         board_id: req.body.board_id,
-        user_id: req.session.user_id,
       });
   
-      res.status(200).json(board);
+      res.status(200).json(card);
     } catch (err) {
       res.status(500).json(err);
     }

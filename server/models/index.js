@@ -41,7 +41,6 @@ Symbol.hasMany(Card, {
 
 // Board has one Symbol (a unique association)
 Board.belongsTo(Symbol, {
-  as: 'BoardSymbol', // Use a custom alias to distinguish this association
   foreignKey: 'symbol_id', // Use the foreign key "SymbolId" in the Board model
 });
 

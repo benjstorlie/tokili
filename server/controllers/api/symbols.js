@@ -86,12 +86,12 @@ const post = {
     async assign(req, res) {
     try {
       // 
-      const { details_url, element_id, type } = req.body; 
+      const { details_url, model_id, model } = req.body; 
   
       // Fetch the symbol object from the external API using symbol_key and id
       const apiUrl = `https://www.opensymbols.org/api/v2`+details_url;
       const response = await axios.get(apiUrl);
-      const symbolData = response.data; // response contains the symbol object
+      const symbolData = response.data.symbol; // response contains the symbol object
   
       // Create a Symbol record in the database if it doesn't exist already
       const [symbol, created] = await Symbol.findOrCreate({
@@ -99,16 +99,16 @@ const post = {
         defaults: symbolData,
       });
   
-      if (type === 'card') {
+      if (model === 'card') {
         // Associate the Symbol with the Card by updating the Card record
-        await Card.update({ symbol_id: symbol.id }, { where: { id: element_id } });
-        res.json({ success: true, message: 'Symbol assigned to Card successfully' });
-      } else if (type === 'board') {
+        const card = await Card.update({ symbol_id: symbol.id }, { where: { id: model_id } });
+        res.json({ success: true, message: 'Symbol assigned to Card successfully' }, ...card);
+      } else if (model === 'board') {
         // Associate the Symbol with the Board by updating the Board record
-        await Board.update({ symbol_id: symbol.id }, { where: { id: element_id } });
-        res.json({ success: true, message: 'Symbol assigned to Board successfully' });
+        const board = await Board.update({ symbol_id: symbol.id }, { where: { id: model_id } });
+        res.json({ success: true, message: 'Symbol assigned to Board successfully' }, ...board);
       } else {
-        res.status(400).json({ error: 'Element type must be either Board or Card.' })
+        res.status(400).json({ error: 'Model name must be either Board or Card.' })
       }
       
     } catch (error) {
