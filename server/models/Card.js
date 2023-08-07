@@ -14,10 +14,11 @@ Card.init(
     },
     title: {
       type: DataTypes.STRING,
+      allowNull: true,
     },
     kind: {
       type: DataTypes.ENUM('card','heading'),
-      default: 'card'
+      defaultValue: 'card'
     },
     board_id: {
       type: DataTypes.INTEGER,
@@ -26,7 +27,6 @@ Card.init(
         model: 'board',
         key: 'id',
       },
-      default: null,
     },
     symbol_id: {
       type: DataTypes.INTEGER,
