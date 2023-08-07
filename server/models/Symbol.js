@@ -54,7 +54,7 @@ Symbol.init(
       type: DataTypes.STRING,
     },
     search_string: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
     },
     unsafe_result: {  // for safesearch on or off.
       type: DataTypes.BOOLEAN,
