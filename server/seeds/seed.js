@@ -1,5 +1,6 @@
 const sequelize = require('../config/connection');
 const axios = require('axios');
+const fs = require('fs');
 const { User, Card, Symbol, Board } = require('../models');
 
 const userSeeds = require('./userSeeds.json');
@@ -107,4 +108,36 @@ const restructureSeedData = async () => {
 }
 
 
-seedDatabase();
+const writeSeedFiles = async () => {
+  const { boardSeeds, cardSeeds, symbolSeeds, } = await restructureSeedData();
+
+  fs.writeFile('./boardSeeds', JSON.stringify(boardSeeds), 'utf8', (err) => {
+    if (err) {
+      console.error('Error writing boardSeeds JSON file:', err);
+    } else {
+      console.log('boardSeeds JSON file has been written successfully.');
+    }
+  });
+
+  fs.writeFile('./cardSeeds', JSON.stringify(cardSeeds), 'utf8', (err) => {
+    if (err) {
+      console.error('Error writing cardSeeds JSON file:', err);
+    } else {
+      console.log('cardSeeds JSON file has been written successfully.');
+    }
+  });
+
+  fs.writeFile('./symbolSeeds', JSON.stringify(symbolSeeds), 'utf8', (err) => {
+    if (err) {
+      console.error('Error writing symbolSeeds JSON file:', err);
+    } else {
+      console.log('symbolSeeds JSON file has been written successfully.');
+    }
+  });
+}
+
+
+// seedDatabase();
+
+writeSeedFiles();
+
