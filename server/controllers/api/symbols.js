@@ -38,7 +38,12 @@ const get = {
   
   async all(req,res) {
     try {
-      const symbolData = await Symbol.findAll();
+      const symbolData = await Symbol.findAll({
+        include: [
+          {model: Board, attributes: ['id','title']},
+          {model: Card, attributes: ['id','title']}
+        ]
+      });
       res.json(symbolData);
     } catch (err) {
       res.status(500).json(err);
