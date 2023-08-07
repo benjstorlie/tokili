@@ -44,7 +44,7 @@ Board.belongsTo(Symbol, {
   foreignKey: 'symbol_id', // Use the foreign key "SymbolId" in the Board model
 });
 
-Symbol.hasOne(Board, {
+Symbol.hasMany(Board, {
   foreignKey: "symbol_id",
   onDelete: 'SET NULL'
 })
