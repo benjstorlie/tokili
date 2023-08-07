@@ -83,7 +83,8 @@ const put = {
 const del = {
   async one(req, res) {
     try {
-      await Card.destroy({where: {id: req.params.cardId}})
+      await Card.destroy({where: {id: req.params.cardId}});
+      res.json({success: true})
     } catch (err) {
       res.status(500).json(err)
     }
