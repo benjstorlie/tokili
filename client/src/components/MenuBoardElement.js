@@ -4,10 +4,9 @@ import { Card, Button, ButtonGroup } from 'react-bootstrap';
 
 const MenuBoardElement = ( {board} ) => {
 
-
   return (
     <Card>
-      <Card.Img variant="top" src={board.symbol.image_url} />
+      <Card.Img variant="top" src={'./public/images/img-sample.png'} />
       <Card.Footer>
         <Card.Title>
           {board.title}

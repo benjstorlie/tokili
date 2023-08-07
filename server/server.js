@@ -7,13 +7,13 @@ const sequelize = require('./config/connection');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 
 const app = express();
-const PORT = process.env.PORT || 5000;  // 5000 matches the "proxy" address in the client package.json
+const PORT = process.env.PORT || 3001;  // 5000 matches the "proxy" address in the client package.json
 
 const sess = {
   secret: 'Super secret secret',
   cookie: {
     maxAge: 3000000,
-    //httpOnly: true,
+    httpOnly: true,
     secure: false,
     sameSite: 'strict',
   },

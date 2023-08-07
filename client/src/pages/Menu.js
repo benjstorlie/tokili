@@ -15,6 +15,9 @@ const Menu = () => {
       const response = await axios.get(`api/boards/`);
       const boardData = response.data;
 
+      // TODO solve problem!
+      // boardData can be console.logged correctly.
+      // but boards won't console.log, but it still tries to render the menuBoardElement incorrectly
       setBoards(boardData);
 
       setMenuIsLoading(false)
