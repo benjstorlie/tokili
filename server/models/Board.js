@@ -35,13 +35,15 @@ Board.init(
   },
   {
     sequelize,
-    timestamps: false,
+    timestamps: true,
     freezeTableName: true,
     underscored: true,
     modelName: 'board',
     hooks: {
       afterCreate: async (board, options) => {
-        const heading = await Card.create( { board_id:board.id, kind: 'heading', show: false } );
+        const [heading, created] = await Card.findOrCreate({
+          where: { board_id:board.id, heading: true }, defaults: {show: false} 
+        });
       }
     }
   }
