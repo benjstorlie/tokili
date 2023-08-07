@@ -8,7 +8,7 @@ const get = {
   async all(req,res) {
     try {
 
-      const cardData = Card.findAll({
+      const cardData = await Card.findAll({ 
         include: [
           {model: Board},
           {model: Symbol}
@@ -30,7 +30,7 @@ const get = {
   // '/cards/:cardId'
   async one(req,res) {
     try {
-      const cardData = Card.findByPk( req.params.cardId, {
+      const cardData = await Card.findByPk( req.params.cardId, {
         include: [
           {model: Board},
           {model: Symbol}
