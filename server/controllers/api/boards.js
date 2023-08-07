@@ -30,7 +30,8 @@ const get = {
         include: [
           { model: User, attributes: [ 'username' ]},
           { model: Symbol, attributes: {include: [ 'image_url' ]}},
-          { model: Card, where: {kind: 'heading'} }
+          { model: Card},
+          // { model: Card, where: {kind: 'card'}, as: 'cards'},
         ]
       });
 
@@ -67,7 +68,7 @@ const post = {
       const { title } = req.body;
       const board_id = req.params.boardId;
 
-      const origBoard = Board.findByPk(board_id, {
+      const origBoard = await Board.findByPk(board_id, {
         include: [
           { model: Card},]
       });
