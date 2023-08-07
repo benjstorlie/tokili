@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "username": "Teri Dactyl",
+    "email": "sal@hotmail.com",
+    "password": "password12345"
+  },
+  {
+    "id": 2,
+    "username": "Paige Turner",
+    "email": "lernantino@gmail.com",
+    "password": "password12345"
+  },
+  {
+    "id": 3,
+    "username": "Captain",
+    "email": "amiko2k20@aol.com",
+    "password": "password12345"
+  },
+  {
+    "id": 4,
+    "username": "Greg Arias",
+    "email": "test@test.com",
+    "password": "test12345"
+  },
+  {
+    "id": 5,
+    "username": "Lois Di Nominator",
+    "email": "ldn@test.net",
+    "password": "test12345"
+  },
+  {
+    "id": 6,
+    "username": "A Cat",
+    "email": "mewow@test.net",
+    "password": "test12345"
+  }
+]
