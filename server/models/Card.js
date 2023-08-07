@@ -58,7 +58,7 @@ Card.init(
         try {
           if (card.kind === 'card') {
             const highestOrderCard = await Card.findOne({
-              where: { board_id: card.board_id },
+              where: { board_id: card.board_id, kind: 'card' },
               order: [['order', 'DESC']],
             });
         
