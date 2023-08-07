@@ -105,3 +105,6 @@ const restructureSeedData = async () => {
 
   return {  boardSeeds, cardSeeds, symbolSeeds, }
 }
+
+
+seedDatabase();
