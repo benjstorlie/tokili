@@ -74,8 +74,8 @@ function Editor(  ) {
         show={showModal}
         onHide={() => setShowModal(false)}
         updateSymbol={updateSymbol} // Pass the callback function
-        type='board'
-        elementId={boardId}
+        model='board'
+        modelId={boardId}
       />
     </div>
   );

@@ -5,8 +5,8 @@ const SymbolSelectionModal = ({
   show, 
   onHide, 
   updateSymbol,
-  type,
-  elementId
+  model,
+  modelId
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [symbols, setSymbols] = useState([]);  // Array of symbol objects retrieved from search
@@ -36,7 +36,7 @@ const SymbolSelectionModal = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ type, element_id: elementId, ...symbol}),
+        body: JSON.stringify({ model, model_id: modelId, ...symbol}),
       });
 
       if (response.ok) {

@@ -76,8 +76,8 @@ const Card = (props) => {
         show={showModal}
         onHide={() => setShowModal(false)}
         updateSymbol={updateSymbol} // Pass the callback function
-        type='card'
-        elementId={cardId}
+        model='card'
+        modelId={cardId}
       />
     </BootstrapCard>
   );
