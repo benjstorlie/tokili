@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
-import { Card as BootstrapCard, Button, Form, CardGroup, Col, Row } from 'react-bootstrap';
+import { Button, Form, Col, Row } from 'react-bootstrap';
 import Card from '../components/Card';
 import Heading from '../components/Heading'; 
 import axios from 'axios';
@@ -39,6 +39,7 @@ function Editor(  ) {
     // Add a new card in the database and update state
     // Send request to add card
     // TODO: Decide about showing/hiding cards vs fully deleting them.
+    // TODO: also look at soft delete
     try {
       const response = await axios.post(`api/cards/`, {
         board_id: boardId
@@ -50,6 +51,11 @@ function Editor(  ) {
     }
   };
 
+  const toggleHeading = () => {
+    // Does not update database.
+    setHeading({show: (!heading.show), ...heading});
+  }
+
   const updateSymbol = (symbol) => {
     setBoardSymbol(symbol);
   }
@@ -60,16 +66,22 @@ function Editor(  ) {
   // Add board title input form
   // Add small board symbol button.
   return (
-    <div className="editor">
-      <button onClick={addCard}>Add Card</button>
+    <>
+      <Row>
+        <Col sm={12} md={2}>
+          <button onClick={addCard}>Add Card</button>
+          <button onClick={toggleHeading}>{heading.show ? "Hide Heading" : "Show Heading"}</button>
+        </Col>
+        <Col>
       <div className='heading-container'>
         <Heading key={heading.id} headingData={heading} />
       </div>
-      <CardGroup>
+      <Row>
         {cards.map(card => (
-          <Card key={card.id} cardData={card} />
+          <Col><Card key={card.id} cardData={card} /></Col>
         ))}
-      </CardGroup>
+        </Row>
+        </Col>
       <SymbolSelectionModal
         show={showModal}
         onHide={() => setShowModal(false)}
@@ -77,7 +89,8 @@ function Editor(  ) {
         model='board'
         modelId={boardId}
       />
-    </div>
+      </Row>
+    </>
   );
 }
 
