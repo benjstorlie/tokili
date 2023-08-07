@@ -1,0 +1,1 @@
+// This could be a one-to-one association for Board, so it can be more flexible
