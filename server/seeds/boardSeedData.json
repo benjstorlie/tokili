@@ -1,0 +1,43 @@
+[
+  {
+    "id": 1,
+    "title": "Yes/No",
+    "symbol_url": "/symbols/arasaac/right-or-wrong-11737115?id=8076",
+    "cards": [
+      {
+        "title": "Yes",
+        "symbol_url": "/symbols/arasaac/yes-2-db942643?id=12523"
+      },
+      {
+        "title": "No",
+        "symbol_url": "/symbols/arasaac/no-1-9a228541?id=6626"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Feelings",
+    "symbol_url": "/symbols/arasaac/how-are-you-751d5c7c?id=5166",
+    "heading": {
+      "title": "How do you feel today?",
+      "symbol_url": "/symbols/arasaac/how-are-you-751d5c7c?id=5166"
+    },
+    "cards": [
+      {
+        "title": "happy",
+        "symbol_url": "/symbols/arasaac/happy-1-a019bb85?id=4900"
+      },
+      {
+        "title": "tired",
+        "symbol_url": "/symbols/arasaac/tired-f8e952de?id=9831"
+      },
+      {
+        "title": "mad",
+        "symbol_url": "/symbols/arasaac/angry-01984a19?id=933"
+      }
+    ]
+  },
+  {
+    "id":3
+  }
+]
