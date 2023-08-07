@@ -85,7 +85,7 @@ const post = {
       });
 
       // create new cards, associated by the newBoard's id
-      await Card.bulkCreate(
+      const cards = await Card.bulkCreate(
         origBoard.cards.map( 
           card => ({
             board_id: newBoard.id,
@@ -94,8 +94,48 @@ const post = {
         )
       );
 
+      res.json(...newBoard, cards);
+
+
     } catch (err) {
       res.status(500).json(err);
+    }
+  },
+
+  // '/boards/:boardId/addCard'
+  // same result as post to '/cards/' with body {board_id: boardId}
+  // new blank card
+  async addCard(req,res) {
+    try {
+      const card = await Card.create({ board_id: req.params.boardId, ...req.body });
+      
+      card
+        ? res.json(card)
+        : res.status(500).json({error: 'Could not add card.'})
+
+    } catch (err) {
+      res.status(500).json(err)
+    }
+  },
+
+  // '/boards/:boardId/addHeading'
+  // same result as post to '/cards/' with body {board_id: boardId, kind: 'heading'}
+  // new blank card
+  async addHeading(req,res) {
+    try {
+      const [heading, created] = await Card.findOrCreate(
+        { 
+          where: { board_id: req.params.boardId, kind: 'heading'},
+          defaults: { ...req.body }
+        }
+      );
+      
+      card
+        ? res.json(card)
+        : res.status(500).json({error: 'Could not add card.'})
+
+    } catch (err) {
+      res.status(500).json(err)
     }
   },
 }
@@ -123,6 +163,8 @@ router.get('/', get.all);
 router.get('/:boardId', get.one);
 router.put('/:boardId', put.update);
 
-router.post('/:boardId/copy', post.copy)
+router.post('/:boardId/copy', post.copy);
+router.post('/:boardId/addCard', post.addCard);
+router.post('/:boardId/addHeading', post.addHeading);
 
 module.exports = router;
