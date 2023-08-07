@@ -29,9 +29,8 @@ const get = {
       const boardData = await Board.findByPk( board_id, {
         include: [
           { model: User, attributes: [ 'username' ]},
-          { model: Symbol, attributes: [ 'image_url' ]},
-          { model: Card, as: 'card' },
-          { model: Card, as: 'heading' }
+          { model: Symbol, attributes: {include: [ 'image_url' ]}},
+          { model: Card, where: {kind: 'heading'} }
         ]
       });
 
@@ -51,9 +50,8 @@ const get = {
 const post = {
   async new(req, res) {
     try {
-      const { title } = req.body;
       const board = await Board.create({
-        title, 
+        title: req.body.title || '', 
         user_id: req.session.user_id,
       });
   
@@ -71,9 +69,7 @@ const post = {
 
       const origBoard = Board.findByPk(board_id, {
         include: [
-          { model: Card, as: 'heading' }, // Alias 'heading' represents the "hasOne" association
-          { model: Card, as: 'card' }, // Alias 'card' represents the "hasMany" association
-        ],
+          { model: Card},]
       });
       if (!origBoard) {
         res.status(404).json({error: 'Board not found.'});
@@ -87,20 +83,12 @@ const post = {
         symbol_id: origBoard.symbol_id,
       });
 
-      // create new heading, associated by the newBoard's id
-      await Card.create({
-        title: origBoard.heading.title,
-        symbol_id: origBoard.heading.symbol_id,
-        board_id: newBoard.id
-      });
-
       // create new cards, associated by the newBoard's id
       await Card.bulkCreate(
         origBoard.cards.map( 
           card => ({
-            title: card.title,
-            symbol_id: card.symbol_id,
-            board_id: newBoard.id
+            board_id: newBoard.id,
+            ...card
           })
         )
       );

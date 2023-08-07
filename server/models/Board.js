@@ -24,33 +24,24 @@ Board.init(
         key: 'id',
       },
     },
-    heading_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,  // heading gets assigned in beforeCreate hook
-      references: {
-        model: 'card',
-        key: 'id',
-      },
-    },
-    symbol_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'symbol',
-        key: 'id',
-      },
-    },
+    // symbol_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   references: {
+    //     model: 'symbol',
+    //     key: 'id',
+    //   },
+    // },
   },
   {
     sequelize,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
     underscored: true,
     modelName: 'board',
     hooks: {
-      beforeCreate: async (board, options) => {
-        const heading = await Card.create( { show: false } )
-        board.heading_id = heading.id;
+      afterCreate: async (board, options) => {
+        const heading = await Card.create( { board_id:board.id, kind: 'heading', show: false } );
       }
     }
   }

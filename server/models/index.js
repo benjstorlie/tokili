@@ -9,6 +9,7 @@ const Symbol = require('./Symbol');
 // Unlike One-To-One and One-To-Many relationships, the defaults for both ON UPDATE and ON DELETE are CASCADE for Many-To-Many relationships
 
 User.hasMany(Board, {
+  foreignKey: 'user_id',
   onDelete: 'SET NULL'
 });
 
@@ -16,27 +17,14 @@ Board.belongsTo(User, {
   foreignKey: 'user_id'
 });
 
-// Board has one "heading" Card (a unique association)
-Board.belongsTo(Card, {
-  as: 'heading', // Use a custom alias to distinguish this association
-  foreignKey: 'heading_id', // Use the foreign key "heading_id" in the Board model
-});
-
-Card.hasOne(Board,{
-  as: 'heading', // Use a custom alias to distinguish this association
-  foreignKey: 'heading_id', // Use the foreign key "heading_id" in the Board model
-})
-// **********
-
 // Board has many other cards (one-to-many association)
 Board.hasMany(Card, {
-  as: 'card', // Use a custom alias to distinguish this association
-  foreignKey: 'board_id', // Use the foreign key "boardId" in the Card model
+  foreignKey: 'board_id', 
+  onDelete: 'CASCADE'
 });
 
-// Card belongs to a Board (to establish the relationship)
 Card.belongsTo(Board, {
-  foreignKey: 'board_id', // Use the foreign key "boardId" in the Card model
+  foreignKey: 'board_id',
 });
 // **********
 
@@ -46,6 +34,7 @@ Card.belongsTo(Symbol, {
 });
 
 Symbol.hasMany(Card, {
+  foreignKey: 'symbol_id',
   onDelete: 'SET NULL'
 });
 // **********
@@ -57,6 +46,7 @@ Board.belongsTo(Symbol, {
 });
 
 Symbol.hasOne(Board, {
+  foreignKey: "symbol_id",
   onDelete: 'SET NULL'
 })
 // **********

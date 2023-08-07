@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const axios = require('axios');
 const { Card , Board, Symbol } = require('../../models');
 
 // Scroll to the end to see the routes
@@ -34,10 +35,22 @@ const get = {
       res.status(500).json({ error: 'Failed to fetch symbols' });
     }
   },
+  
+  async all(req,res) {
+    try {
+      const symbolData = await Symbol.findAll();
+      res.json(symbolData);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  },
 
   async one(req,res) {
     try {
-
+      const symbolData = await Symbol.findByPk(req.params.symbolId);
+      !symbolData
+        ? res.status(404).json({error: 'No symbol found.'})
+        : res.status(200).json(symbolData);
     } catch (err) {
       res.status(500).json(err);
     }
@@ -54,7 +67,7 @@ const post = {
       // This returns the same kind of symbol object that is in the search results array.
       const apiUrl = `https://www.opensymbols.org/api/v2` + details_url;
       const response = await axios.get(apiUrl);
-      const symbolData = response.data; // response contains the symbol object
+      const symbolData = response.data.symbol; // response contains the symbol object
   
       // Create a Symbol record in the database if it doesn't exist already
       const [symbol, created] = await Symbol.findOrCreate({
@@ -106,7 +119,8 @@ const post = {
 }
 router.post('/new', post.new);
 router.post('/', post.assign);
-router.get('/', get.search);
+router.get('/search', get.search);
+router.get('/', get.all)
 router.get('/:symbolId', get.one);
 
 module.exports = router;

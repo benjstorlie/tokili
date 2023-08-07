@@ -15,22 +15,27 @@ Card.init(
     title: {
       type: DataTypes.STRING,
     },
-    board_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'board',
-        key: 'id',
-      },
+    kind: {
+      type: DataTypes.ENUM('card','heading'),
+      default: 'card'
     },
-    symbol_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'symbol',
-        key: 'id',
-      },
-    },
+    // board_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   references: {
+    //     model: 'board',
+    //     key: 'id',
+    //   },
+    //   default: null,
+    // },
+    // symbol_id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: true,
+    //   references: {
+    //     model: 'symbol',
+    //     key: 'id',
+    //   },
+    // },
     order: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -44,14 +49,14 @@ Card.init(
   },
   {
     sequelize,
-    timestamps: true,
+    timestamps: false,
     freezeTableName: true,
     underscored: true,
     modelName: 'card',
     hooks: {
       beforeCreate: async (card,options) => {
         try {
-          if (card.board_id) {
+          if (card.kind === 'card') {
             const highestOrderCard = await Card.findOne({
               where: { board_id: card.board_id },
               order: [['order', 'DESC']],
