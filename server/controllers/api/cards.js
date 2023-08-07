@@ -80,10 +80,21 @@ const put = {
   },
 }
 
+const del = {
+  async one(req, res) {
+    try {
+      await Card.destroy({where: {id: req.params.cardId}})
+    } catch (err) {
+      res.status(500).json(err)
+    }
+  }
+}
+
 router.post('/', post.new);
 router.get('/', get.all);
 
 router.get('/:cardId', get.one);
 router.put('/:cardId', put.update);
+router.delete('/:cardId', del.one);
 
 module.exports = router;
