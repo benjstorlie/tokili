@@ -70,8 +70,8 @@ function Editor(  ) {
     <>
       <Row>
         <Col sm={12} md={2}>
-          <button onClick={addCard}>Add Card</button>
-          <button onClick={toggleHeading}>{heading.show ? "Hide Heading" : "Show Heading"}</button>
+          <Button variant="primary" onClick={addCard}>Add Card</Button>
+          <Button variant="success" onClick={toggleHeading}>{heading.show ? "Hide Heading" : "Show Heading"}</Button>
         </Col>
         <Col>
       <div className='heading-container'>
