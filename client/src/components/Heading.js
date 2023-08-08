@@ -5,7 +5,7 @@ import SymbolSelectionModal from './SymbolSelectionModal';
 const Heading = (props) => {
   const cardId = props.cardId;
   const [title, setTitle] = useState(props.title || '');
-  const [imageUrl, setImageUrl] = useState(props.symbol.image_url || '');
+  const [imageUrl, setImageUrl] = useState(props.symbol ? props.symbol.image_url : '');
   const [showModal, setShowModal] = useState(false);
 
   const handleTitleSubmit = (e) => {
@@ -18,6 +18,10 @@ const Heading = (props) => {
     setImageUrl('');
     // TODO: fetch PUT symbol_id
   };
+
+  const updateSymbol = (symbol) => {
+    setImageUrl(symbol.image_url);
+  }
 
   const handleRemoveCard = () => {
     // TODO: fill out hide/remove heading function
@@ -59,7 +63,7 @@ const Heading = (props) => {
         className={`card-img-bottom ${
           imageUrl ? 'with-image' : 'no-image'
         }`}
-        onClick={handleSymbolClick}
+        onClick={() => setShowModal(true)}
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : null}
       >
         {imageUrl && (

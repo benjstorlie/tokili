@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
 import { Button, Form, Col, Row } from 'react-bootstrap';
 import Card from '../components/Card';
+import SymbolSelectionModal from '../components/SymbolSelectionModal';
 import Heading from '../components/Heading'; 
 import axios from 'axios';
 
 function Editor(  ) {
   const {boardId} = useParams();
+
   const [boardIsLoading, setBoardIsLoading] = useState(false);
   const [getBoardError, setGetBoardError] = useState(null);
   const [cards, setCards] = useState([]);
@@ -19,13 +21,13 @@ function Editor(  ) {
     setBoardIsLoading(true);
     // Fetch initial data from the server
     try {
-      const response = await axios.get(`api/boards/${boardId}`);
-      const boardData = response.data;
-
-      setBoardTitle(boardData.title);
-      setBoardSymbol(boardData.symbol);
-      setHeading(boardData.heading);
-      setCards(boardData.cards);
+      const response = await axios.get(`/api/boards/${boardId}`);
+      const {title, symbol, cards} = response.data;
+      console.log(response.data);
+      setBoardTitle(title);
+      setBoardSymbol(symbol);
+      setHeading(cards.find(x => x.heading));
+      setCards(cards.filter(x => !x.heading));
 
       setBoardIsLoading(false)
     } catch (error) {

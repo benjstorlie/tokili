@@ -3,16 +3,15 @@ import { Card, Button, ButtonGroup } from 'react-bootstrap';
 // Remember, this "Card" is not the same as the Card element used elsewhere.
 
 const MenuBoardElement = ( {board} ) => {
-
   return (
     <Card>
-      <Card.Img variant="top" src={'./public/images/img-sample.png'} />
+      <Card.Img variant="top" src={'./assets/images/img-sample.png'} />
       <Card.Footer>
         <Card.Title>
           {board.title}
         </Card.Title>
         <Card.Subtitle>
-          {board.user.username}
+          {(board.user ? board.user.username : '')}
         </Card.Subtitle>
         <ButtonGroup aria-label="Board Options">
           <Button 

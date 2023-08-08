@@ -17,7 +17,7 @@ function App() {
         <Col>
           <Routes>
             <Route path='/' element={ <Menu />} />
-            <Route path='/editor' element={ <Editor />} />
+            <Route path='/editor/:boardId' element={ <Editor />} />
             <Route path='/deploy' element={ <Deploy />} />
             <Route path='/login' element={ <AuthPage />} />
           </Routes>

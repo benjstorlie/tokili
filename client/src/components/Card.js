@@ -5,13 +5,17 @@ import SymbolSelectionModal from './SymbolSelectionModal';
 const Card = (props) => {
   const cardId = props.cardId;
   const [title, setTitle] = useState(props.title || '');
-  const [imageUrl, setImageUrl] = useState(props.symbol.image_url || '');
+  const [imageUrl, setImageUrl] = useState(props.symbol ? props.symbol.image_url : '');
   const [showModal, setShowModal] = useState(false);
 
   const handleTitleSubmit = (e) => {
     // TODO: fetch PUT title
     // 
   };
+
+  const updateSymbol = (symbol) => {
+    setImageUrl(symbol.image_url);
+  }
 
   const handleRemoveImage = (e) => {
     e.stopPropagation();
@@ -59,8 +63,8 @@ const Card = (props) => {
         className={`card-img-bottom ${
           imageUrl ? 'with-image' : 'no-image'
         }`}
-        onClick={handleSymbolClick}
-        style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : null}
+        onClick={() => setShowModal(true)}
+        style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : null}
       >
         {imageUrl && (
           <Button
@@ -73,6 +77,7 @@ const Card = (props) => {
         )}
       </div>
       <SymbolSelectionModal
+        key={cardId}
         show={showModal}
         onHide={() => setShowModal(false)}
         updateSymbol={updateSymbol} // Pass the callback function

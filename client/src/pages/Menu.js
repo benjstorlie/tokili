@@ -17,9 +17,11 @@ const Menu = () => {
 
       // TODO solve problem!
       // boardData can be console.logged correctly.
+      console.log(boardData)
+      
       // but boards won't console.log, but it still tries to render the menuBoardElement incorrectly
       setBoards(boardData);
-
+console.log(boards.length)
       setMenuIsLoading(false)
     } catch (error) {
       setGetMenuError(error);
@@ -36,11 +38,13 @@ const Menu = () => {
       </Col>
       <Col> 
         <Row>
-          {boards.map(board => (
+          {boards.map(function (board) {
+            console.log(board.id)
+            return( 
             <Col>
-              <MenuBoardElement key={board.id} boardData={board} />
+              <MenuBoardElement key={board.id} board={board} />
             </Col>
-          ))}
+          )})}
           {menuIsLoading ? (<Col sm={12}><span>Menu Loading...</span></Col>): (<></>)}
           {getMenuError ? (<Col sm={12}><span>Menu Loading Error</span></Col>): (<></>)}
         </Row>
