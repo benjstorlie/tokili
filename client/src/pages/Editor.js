@@ -15,7 +15,7 @@ function Editor(  ) {
   const [heading, setHeading] = useState({});
   const [boardTitle, setBoardTitle] = useState('');
   const [boardSymbol, setBoardSymbol] = useState({});
-  const [showModal, setShowModal] = useState('false');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect( async () => {
     setBoardIsLoading(true);
@@ -23,7 +23,6 @@ function Editor(  ) {
     try {
       const response = await axios.get(`/api/boards/${boardId}`);
       const {title, symbol, cards} = response.data;
-      console.log(response.data);
       setBoardTitle(title);
       setBoardSymbol(symbol);
       setHeading(cards.find(x => x.heading));
@@ -80,7 +79,7 @@ function Editor(  ) {
       </div>
       <Row>
         {cards.map(card => (
-          <Col><Card key={card.id} cardData={card} /></Col>
+          <Col key={card.id} ><Card key={card.id} cardData={card} /></Col>
         ))}
         </Row>
         </Col>

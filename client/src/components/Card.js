@@ -59,7 +59,7 @@ const Card = (props) => {
         &times;
       </Button>
       </BootstrapCard.Header>
-      <div
+      <button
         className={`card-img-bottom ${
           imageUrl ? 'with-image' : 'no-image'
         }`}
@@ -75,7 +75,7 @@ const Card = (props) => {
             <span aria-hidden="true">&times;</span>
           </Button>
         )}
-      </div>
+      </button>
       <SymbolSelectionModal
         key={cardId}
         show={showModal}

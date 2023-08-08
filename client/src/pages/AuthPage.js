@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { redirect } from 'react-router-dom';
 import { Card, Form, Button } from 'react-bootstrap';
 
+// TODO fix duplicate ids
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

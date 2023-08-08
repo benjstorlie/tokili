@@ -51,7 +51,7 @@ const SymbolSelectionModal = ({
   };
 
   return (
-    <Modal show={show} onHide={onHide} >
+    <Modal key={model+modelId} show={show} onHide={onHide} >
     <Modal.Header closeButton>
       <Modal.Title>Select Symbol</Modal.Title>
       <Form onSubmit={handleSearchSubmit}>
