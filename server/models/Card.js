@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes , Op } = require('sequelize');
 const sequelize = require('../config/connection');
 
 
@@ -55,19 +55,37 @@ Card.init(
     modelName: 'card',
     hooks: {
       beforeCreate: async (card,options) => {
+        // if applicable, assign card order to be the lowest unused integer.
         try {
           // Assuming if card.order is defined in the card creation that it is correct.
           // isInteger would be false for null and undefined, but not 0.
-          if (!card.heading && !Number.isInteger(card.order)) {
-            const highestOrderCard = await Card.findOne({
-              where: { board_id: card.board_id, heading: false },
-              order: [['order', 'DESC']],
+          if (!card.heading && card.show && !Number.isInteger(card.order)) {
+            const currentCards = await Card.findAll({
+              where: { 
+                board_id: card.board_id, 
+                heading: false, 
+                show: true, 
+                order: { [Op.not]: null }, 
+              },
+              attributes: ['order']
             });
-        
-            if (highestOrderCard) {
-              card.order = highestOrderCard.order + 1;
+            
+            const currentOrderValues = currentCards.map( c => c.order);
+            const maxOrder = Math.max(...currentOrderValues);
+
+            // A quick check to see if the orders are already inclusive, assuming uniqueness.
+            if (maxOrder+1 === currentOrderValues.length ) {
+              card.order = maxOrder+1;
             } else {
-              card.order = 0;
+              // increment newOrder and find the first unused integer, then end loop
+              let newOrder = 0;
+              for (let i = 0; i <= maxOrder + 1; i++) {
+                if (!currentOrderValues.includes(i)) {
+                  newOrder = i;
+                  break;
+                }
+              }
+              card.order = newOrder;
             }
           }
         } catch (error) {

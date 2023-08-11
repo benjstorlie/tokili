@@ -5,9 +5,10 @@
   "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"npm run start:client\" \"npm run start:backend\"",
-    "start:frontend": "cd client && npm start",
-    "start:backend": "cd server && npm start"
+    "start": "concurrently \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "cd client && npm start",
+    "start:server": "cd server && npm start",
+    "build": "cd client && npm run build"
   },
   "keywords": [],
   "repository": {
@@ -17,6 +18,7 @@
   "author": "Ben Storlie <benjstorlie@gmail.com> (https://benjstorlie.github.io/)",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "axios": "^1.4.0"
   }
 }

@@ -19,6 +19,10 @@ const Heading = (props) => {
     // TODO: fetch PUT symbol_id
   };
 
+  const updateSymbol = (symbol) => {
+    setImageUrl(symbol.image_url);
+  }
+
   const handleRemoveCard = () => {
     // TODO: fill out hide/remove heading function
     return
@@ -59,7 +63,7 @@ const Heading = (props) => {
         className={`card-img-bottom ${
           imageUrl ? 'with-image' : 'no-image'
         }`}
-        onClick={handleSymbolClick}
+        onClick={() => setShowModal(true)}
         style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : null}
       >
         {imageUrl && (

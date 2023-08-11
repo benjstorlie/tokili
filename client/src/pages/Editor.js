@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import {useParams} from 'react-router-dom';
-import { Card as BootstrapCard, Button, Form, CardGroup, Col, Row } from 'react-bootstrap';
+import { Button, Form, Col, Row } from 'react-bootstrap';
 import Card from '../components/Card';
+import SymbolSelectionModal from '../components/SymbolSelectionModal';
 import Heading from '../components/Heading'; 
 import axios from 'axios';
 
 function Editor(  ) {
   const {boardId} = useParams();
+
   const [boardIsLoading, setBoardIsLoading] = useState(false);
   const [getBoardError, setGetBoardError] = useState(null);
   const [cards, setCards] = useState([]);
   const [heading, setHeading] = useState({});
   const [boardTitle, setBoardTitle] = useState('');
   const [boardSymbol, setBoardSymbol] = useState({});
-  const [showModal, setShowModal] = useState('false');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect( async () => {
     setBoardIsLoading(true);
     // Fetch initial data from the server
     try {
-      const response = await axios.get(`api/boards/${boardId}`);
-      const boardData = response.data;
-
-      setBoardTitle(boardData.title);
-      setBoardSymbol(boardData.symbol);
-      setHeading(boardData.heading);
-      setCards(boardData.cards);
+      const response = await axios.get(`/api/boards/${boardId}`);
+      const {title, symbol, cards} = response.data;
+      setBoardTitle(title);
+      setBoardSymbol(symbol);
+      setHeading(cards.find(x => x.heading));
+      setCards(cards.filter(x => !x.heading));
 
       setBoardIsLoading(false)
     } catch (error) {
@@ -39,6 +40,7 @@ function Editor(  ) {
     // Add a new card in the database and update state
     // Send request to add card
     // TODO: Decide about showing/hiding cards vs fully deleting them.
+    // TODO: also look at soft delete
     try {
       const response = await axios.post(`api/cards/`, {
         board_id: boardId
@@ -50,6 +52,11 @@ function Editor(  ) {
     }
   };
 
+  const toggleHeading = () => {
+    // Does not update database.
+    setHeading({show: (!heading.show), ...heading});
+  }
+
   const updateSymbol = (symbol) => {
     setBoardSymbol(symbol);
   }
@@ -60,16 +67,22 @@ function Editor(  ) {
   // Add board title input form
   // Add small board symbol button.
   return (
-    <div className="editor">
-      <button onClick={addCard}>Add Card</button>
+    <>
+      <Row>
+        <Col sm={12} md={2}>
+          <Button variant="primary" onClick={addCard}>Add Card</Button>
+          <Button variant="success" onClick={toggleHeading}>{heading.show ? "Hide Heading" : "Show Heading"}</Button>
+        </Col>
+        <Col>
       <div className='heading-container'>
         <Heading key={heading.id} headingData={heading} />
       </div>
-      <CardGroup>
+      <Row>
         {cards.map(card => (
-          <Card key={card.id} cardData={card} />
+          <Col key={card.id} ><Card key={card.id} cardData={card} /></Col>
         ))}
-      </CardGroup>
+        </Row>
+        </Col>
       <SymbolSelectionModal
         show={showModal}
         onHide={() => setShowModal(false)}
@@ -77,7 +90,8 @@ function Editor(  ) {
         model='board'
         modelId={boardId}
       />
-    </div>
+      </Row>
+    </>
   );
 }
 

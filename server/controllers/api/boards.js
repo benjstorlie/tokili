@@ -154,6 +154,23 @@ const put = {
       res.status(500).json({ error: 'Failed update board.' });
     }    
   },
+  // '/boards/:boardId/reorder'
+  async reorderCards(req,res) {
+    // make sure hidden cards and heading have order null
+    // and make sure shown cards have unique integer orders.
+  }
+}
+
+const del = {
+  // '/boards/:boardId'
+  async one(res,req) {
+
+  },
+
+  // '/boards/:boardId/hiddenCards'
+  async hiddenCards(res, req) {
+
+  },
 }
 
 

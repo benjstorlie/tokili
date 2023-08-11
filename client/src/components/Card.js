@@ -13,6 +13,10 @@ const Card = (props) => {
     // 
   };
 
+  const updateSymbol = (symbol) => {
+    setImageUrl(symbol.image_url);
+  }
+
   const handleRemoveImage = (e) => {
     e.stopPropagation();
     setImageUrl('');
@@ -55,12 +59,12 @@ const Card = (props) => {
         &times;
       </Button>
       </BootstrapCard.Header>
-      <div
+      <button
         className={`card-img-bottom ${
           imageUrl ? 'with-image' : 'no-image'
         }`}
-        onClick={handleSymbolClick}
-        style={imageUrl ? { backgroundImage: `url(${imageUrl})` } : null}
+        onClick={() => setShowModal(true)}
+        style={imageUrl ? { backgroundImage: `url("${imageUrl}")` } : null}
       >
         {imageUrl && (
           <Button
@@ -71,8 +75,9 @@ const Card = (props) => {
             <span aria-hidden="true">&times;</span>
           </Button>
         )}
-      </div>
+      </button>
       <SymbolSelectionModal
+        key={cardId}
         show={showModal}
         onHide={() => setShowModal(false)}
         updateSymbol={updateSymbol} // Pass the callback function
