@@ -7,13 +7,13 @@ const MenuBoardElement = ( {board} ) => {
 
   return (
     <Card>
-      <Card.Img variant="top" src={board.symbol.image_url} />
+      <Card.Img variant="top" src={board.symbol.image_url || './images/img_sample.png'} />
       <Card.Footer>
         <Card.Title>
           {board.title}
         </Card.Title>
         <Card.Subtitle>
-          {board.user.username}
+          {board.user?.username || ''}
         </Card.Subtitle>
         <ButtonGroup aria-label="Board Options">
           <Button 

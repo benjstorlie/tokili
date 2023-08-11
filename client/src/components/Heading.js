@@ -5,7 +5,7 @@ import SymbolSelectionModal from './SymbolSelectionModal';
 const Heading = (props) => {
   const cardId = props.cardId;
   const [title, setTitle] = useState(props.title || '');
-  const [imageUrl, setImageUrl] = useState(props.symbol.image_url || '');
+  const [imageUrl, setImageUrl] = useState(props.symbol?.image_url || '');
   const [showModal, setShowModal] = useState(false);
 
   const handleTitleSubmit = (e) => {
