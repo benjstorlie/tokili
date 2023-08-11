@@ -75,7 +75,7 @@ function Editor(  ) {
         </Col>
         <Col>
       <div className='heading-container'>
-        <Heading key={heading.id} headingData={heading} />
+        <Card key={heading.id} cardData={{...heading, isHeading: true}} />
       </div>
       <Row>
         {cards.map(card => (

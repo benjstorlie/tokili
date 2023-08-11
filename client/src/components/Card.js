@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { Card as BootstrapCard, Button, Form } from 'react-bootstrap';
+// Bootstrap
+import BootstrapCard from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+
 import SymbolSelectionModal from './SymbolSelectionModal';
 
 const Card = (props) => {
   const cardId = props.cardId;
+  const isHeading = props.isHeading || false;
   const [title, setTitle] = useState(props.title || '');
   const [imageUrl, setImageUrl] = useState(props.symbol?.image_url || '');
   const [showModal, setShowModal] = useState(false);

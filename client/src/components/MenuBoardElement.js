@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { Card, Button, ButtonGroup } from 'react-bootstrap';
+
+// Bootstrap
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 // Remember, this "Card" is not the same as the Card element used elsewhere.
 
 const MenuBoardElement = ( {board} ) => {
