@@ -1,10 +1,10 @@
 # Tokili
 
-- Forked from group project (Pick-a-Pic)[github.com/benjstorlie/pick-a-pic]
+- Forked from group project [Pick-a-Pic](github.com/benjstorlie/pick-a-pic)
 
 ## Concept
 
-Pick-a-Pick is a small application to pick from selections of pictures. The user searches for pictures, presents options to the intended user with a disability or language barrier, and the choice is communicated clearly using the application.
+Tokili is designed to be an Alternative and Augmentative Communication (AAC) application. **quick description of aac, look at sources** The idea 
 
 ### As a Person with a Speech Disability (and/or Cognitive, Physical, etc. Disability)
 ```
